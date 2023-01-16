@@ -27,7 +27,7 @@
 # the GNU General Public License.
 
 REV=0.12.0
-ZIP_FILENAME=WiFi101-Updater-ArduinoIDE-Plugin-$REV
+ZIP_FILENAME=WINCTool-ArduinoIDE-Plugin-$REV
 REQUIRED_JARS="pde.jar arduino-core.jar jssc-2.8.0-arduino4.jar bcpg-jdk15on-152.jar bcprov-jdk15on-152.jar commons-lang3-3.8.1.jar commons-codec-1.7.jar commons-io-2.6.jar"
 
 # Check existence of the IDE folder
@@ -57,14 +57,14 @@ for JAR in $REQUIRED_JARS; do
 done
 
 # Create staging folder
-OUTPUT_FOLDER=`pwd`/WiFi101/tool
+OUTPUT_FOLDER=`pwd`/WINCTool/tool
 mkdir -p $OUTPUT_FOLDER
 
 # Build java plugin
 mkdir -p build
-javac -target 1.8 -cp "$CLASSPATH" -d build src/cc/arduino/plugins/wifi101/WiFi101.java
+javac -target 1.8 -cp "$CLASSPATH" -d build src/cc/arduino/plugins/winctool/WINCTool.java
 cd build
-zip -r $OUTPUT_FOLDER/WiFi101.jar *
+zip -r $OUTPUT_FOLDER/WINCTool.jar *
 cd ..
 rm -r build
 
@@ -73,10 +73,10 @@ cp -rv firmwares $OUTPUT_FOLDER
 
 # Create distribution .zip
 mkdir -p dist
-zip -r dist/$ZIP_FILENAME.zip WiFi101/
+zip -r dist/$ZIP_FILENAME.zip WINCTool/
 
 # Cleanup
-rm -r WiFi101
+rm -r WINCTool
 
 # Install in current IDE
 case "$OSTYPE" in

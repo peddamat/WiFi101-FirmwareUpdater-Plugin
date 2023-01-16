@@ -25,7 +25,7 @@
  * invalidate any other reasons why the executable file might be covered by
  * the GNU General Public License.
  */
-package cc.arduino.plugins.wifi101.flashers;
+package cc.arduino.plugins.winctool.flashers;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -41,7 +41,7 @@ import javax.swing.JProgressBar;
 import org.apache.commons.lang3.StringUtils;
 
 import cc.arduino.packages.BoardPort;
-import cc.arduino.plugins.wifi101.flashers.java.FlasherSerialClient;
+import cc.arduino.plugins.winctool.flashers.java.FlasherSerialClient;
 import processing.app.Base;
 import processing.app.BaseNoGui;
 import processing.app.packages.LibraryList;

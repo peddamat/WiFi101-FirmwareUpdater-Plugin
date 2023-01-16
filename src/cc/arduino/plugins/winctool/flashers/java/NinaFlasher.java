@@ -25,22 +25,26 @@
  * invalidate any other reasons why the executable file might be covered by
  * the GNU General Public License.
  */
-package cc.arduino.plugins.wifi101.flashers.java;
+package cc.arduino.plugins.winctool.flashers.java;
 
+import java.io.ByteArrayOutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.security.MessageDigest;
 import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
 import java.util.Arrays;
 import java.util.List;
 
-import cc.arduino.plugins.wifi101.certs.WiFi101Certificate;
-import cc.arduino.plugins.wifi101.certs.WiFi101CertificateBundle;
-import cc.arduino.plugins.wifi101.flashers.Flasher;
+import org.apache.commons.codec.binary.Base64;
 
-public class WINCFlasher extends Flasher {
+import cc.arduino.plugins.winctool.flashers.Flasher;
 
-	public WINCFlasher(String _modulename, String _version, String _filename, boolean _certavail, int _baudrate, List<String> _compatibleBoard) {
+public class NinaFlasher extends Flasher {
+
+	public byte[] md5Checksum;
+
+	public NinaFlasher(String _modulename, String _version, String _filename, boolean _certavail, int _baudrate, List<String> _compatibleBoard) {
 		super(_modulename, _version, _filename, _certavail, _baudrate, _compatibleBoard);
 	}
 
@@ -61,6 +65,7 @@ public class WINCFlasher extends Flasher {
 			int written = 0;
 
 			progress(20, "Erasing target...");
+
 			client.eraseFlash(address, size);
 
 			while (written < size) {
@@ -73,22 +78,19 @@ public class WINCFlasher extends Flasher {
 				written += len;
 				address += len;
 			}
-			int readed = 0;
+
+			progress(55, "Verifying...");
+
+			md5Checksum = getMD5Checksum(fwData);
+
 			address = 0x00000000;
-			while (readed < size) {
-				progress(60 + readed * 40 / size, "Verifying...");
-				int len = maxPayload;
-				if (readed + len > size) {
-					len = size - readed;
-				}
-				byte[] data = client.readFlash(address, len);
-				if (!Arrays.equals(data, Arrays.copyOfRange(fwData, readed, readed + len))) {
-					throw new Exception("Error during verify at address " + address);
-				}
-				readed += len;
-				address += len;
+			byte[] md5rec = client.md5Flash(address, size);
+			progress(75, "Verifying...");
+			if (Arrays.equals(md5rec, md5Checksum)) {
+				progress(100, "Done!");
+			} else {
+				throw new Exception("Error validating flashed firmware");
 			}
-			progress(100, "Done!");
 		} finally {
 			if (client != null) {
 				client.close();
@@ -100,45 +102,61 @@ public class WINCFlasher extends Flasher {
 	public void uploadCertificates(String port, List<String> websites) throws Exception {
 		FlasherSerialClient client = null;
 		try {
+			file = openFirmwareFile();
 			progress(10, "Connecting to programmer...");
 			client = new FlasherSerialClient();
 			client.open(port, this.baudrate);
 			client.hello();
 			int maxPayload = client.getMaximumPayload();
+			int count = websites.size();
+			String pem = "";
 
-			progress(20, "Reading section header");
-			byte[] startPattern = client.readFlash(0x00004000, 16);
+			for (String website : websites) {
+				URL url;
+				try {
+					url = new URL(website);
+				} catch (MalformedURLException e1) {
+					url = new URL("https://" + website);
+				}
 
-			WiFi101CertificateBundle certBundle = createBundleFromWebsites(websites);
+				progress(30 + 20 * count / websites.size(), "Downloading certificate from " + website + "...");
+				Certificate[] certificates = SSLCertDownloader.retrieveFromURL(url);
 
-			byte[] certData;
-
-			if (Arrays.equals(WiFi101CertificateBundle.START_PATTERN_V0, startPattern)) {
-				certData = certBundle.getEncodedV0();
-			} else if (Arrays.equals(WiFi101CertificateBundle.START_PATTERN_V1, startPattern)) {
-				certData = certBundle.getEncodedV1();
-			} else {
-				throw new Exception("Unknown starting pattern, please reflash firmware!");
+				// Pick the latest certificate (that should be the root cert)
+				X509Certificate x509 = (X509Certificate) certificates[certificates.length - 1];
+				pem = convertToPem(x509) + "\n" + pem;
 			}
 
-			int size = certData.length;
-			int address = 0x00004000;
+			byte[] pemArray = pem.getBytes();
+			ByteArrayOutputStream output = new ByteArrayOutputStream();
+			output.write(pemArray);
+			while (output.size() % maxPayload != 0) {
+				output.write(0);
+			}
+			byte[] fwData = output.toByteArray();
+
+			int size = fwData.length;
+			int address = 0x10000;
 			int written = 0;
 
-			progress(50, "Erasing target...");
+			if (size > 0x20000) {
+				throw new Exception("Too many certificates!");
+			}
+
+			progress(20, "Erasing target...");
+
 			client.eraseFlash(address, size);
 
 			while (written < size) {
-				progress(60 + written * 80 / size, "Programming...");
+				progress(20 + written * 40 / size, "Programming " + size + " bytes ...");
 				int len = maxPayload;
 				if (written + len > size) {
 					len = size - written;
 				}
-				client.writeFlash(address, Arrays.copyOfRange(certData, written, written + len));
+				client.writeFlash(address, Arrays.copyOfRange(fwData, written, written + len));
 				written += len;
 				address += len;
 			}
-			progress(100, "Done!");
 		} finally {
 			if (client != null) {
 				client.close();
@@ -146,26 +164,32 @@ public class WINCFlasher extends Flasher {
 		}
 	}
 
-	public WiFi101CertificateBundle createBundleFromWebsites(List<String> websites) throws Exception {
-		WiFi101CertificateBundle certBundle = new WiFi101CertificateBundle();
-		int count = 0;
-		for (String website : websites) {
-			URL url;
-			try {
-				url = new URL(website);
-			} catch (MalformedURLException e1) {
-				url = new URL("https://" + website);
-			}
+	protected static String convertToPem(X509Certificate cert) {
+		Base64 encoder = new Base64(64, "\n".getBytes());
+		String cert_begin = "-----BEGIN CERTIFICATE-----\n";
+		String end_cert = "-----END CERTIFICATE-----";
 
-			progress(30 + 20 * count / websites.size(), "Downloading certificate from " + website + "...");
-			Certificate[] certificates = SSLCertDownloader.retrieveFromURL(url);
-
-			// Pick the latest certificate (that should be the root cert)
-			X509Certificate x509 = (X509Certificate) certificates[certificates.length - 1];
-
-			WiFi101Certificate cert = new WiFi101Certificate(x509);
-			certBundle.add(cert);
+		try {
+			byte[] derCert = cert.getEncoded();
+			String pemCertPre = new String(encoder.encode(derCert));
+			String pemCert = cert_begin + pemCertPre + end_cert;
+			return pemCert;
+		} catch (Exception e) {
+			// do nothing
+			return "";
 		}
-		return certBundle;
+	}
+
+	public static byte[] getMD5Checksum(byte[] buffer) throws Exception{
+		try {
+			MessageDigest complete = MessageDigest.getInstance("MD5");
+			int numRead = buffer.length;
+			if (numRead > 0) {
+				complete.update(buffer, 0, numRead);
+			}
+			return complete.digest();
+		} catch (Exception e) {
+			throw new Exception("Error in MD5 checksum computation.");
+		}
 	}
 }

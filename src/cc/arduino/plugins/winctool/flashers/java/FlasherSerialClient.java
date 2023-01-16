@@ -25,7 +25,7 @@
  * invalidate any other reasons why the executable file might be covered by
  * the GNU General Public License.
  */
-package cc.arduino.plugins.wifi101.flashers.java;
+package cc.arduino.plugins.winctool.flashers.java;
 
 import static jssc.SerialPort.PARITY_NONE;
 import static jssc.SerialPort.STOPBITS_1;

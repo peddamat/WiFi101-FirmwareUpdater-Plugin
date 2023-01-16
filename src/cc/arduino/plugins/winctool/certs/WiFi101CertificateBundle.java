@@ -25,7 +25,7 @@
  * invalidate any other reasons why the executable file might be covered by
  * the GNU General Public License.
  */
-package cc.arduino.plugins.wifi101.certs;
+package cc.arduino.plugins.winctool.certs;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -44,13 +44,13 @@ public class WiFi101CertificateBundle extends ArrayList<WiFi101Certificate> {
 		ByteArrayOutputStream res = new ByteArrayOutputStream();
 		try {
 			res.write(START_PATTERN_V0);
-			
+
 			// Write number of certs, little endian
 			res.write(size());
 			res.write(0);
 			res.write(0);
 			res.write(0);
-			
+
 			for (WiFi101Certificate cert : this) {
 				res.write(cert.getEncodedV0());
 			}
@@ -66,13 +66,13 @@ public class WiFi101CertificateBundle extends ArrayList<WiFi101Certificate> {
 		ByteArrayOutputStream res = new ByteArrayOutputStream();
 		try {
 			res.write(START_PATTERN_V1);
-			
+
 			// Write number of certs, little endian
 			res.write(size());
 			res.write(0);
 			res.write(0);
 			res.write(0);
-			
+
 			for (WiFi101Certificate cert : this) {
 				res.write(cert.getEncodedV1());
 			}

@@ -25,7 +25,7 @@
  * invalidate any other reasons why the executable file might be covered by
  * the GNU General Public License.
  */
-package cc.arduino.plugins.wifi101;
+package cc.arduino.plugins.winctool;
 
 import static java.util.Arrays.asList;
 
@@ -36,9 +36,9 @@ import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 
 import cc.arduino.packages.BoardPort;
-import cc.arduino.plugins.wifi101.flashers.Flasher;
-import cc.arduino.plugins.wifi101.flashers.java.NinaFlasher;
-import cc.arduino.plugins.wifi101.flashers.java.WINCFlasher;
+import cc.arduino.plugins.winctool.flashers.Flasher;
+import cc.arduino.plugins.winctool.flashers.java.NinaFlasher;
+import cc.arduino.plugins.winctool.flashers.java.WINCFlasher;
 import processing.app.Base;
 
 @SuppressWarnings("serial")

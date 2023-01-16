@@ -25,12 +25,12 @@
  * invalidate any other reasons why the executable file might be covered by
  * the GNU General Public License.
  */
-package cc.arduino.plugins.wifi101;
+package cc.arduino.plugins.winctool;
 
 import processing.app.Editor;
 import processing.app.tools.Tool;
 
-public class WiFi101 implements Tool {
+public class WINCTool implements Tool {
 	Editor editor;
 
 	UpdaterImpl updater;
@@ -42,7 +42,7 @@ public class WiFi101 implements Tool {
 
 	@Override
 	public String getMenuTitle() {
-		return "WiFi101 / WiFiNINA Firmware Updater";
+		return "ATWINC1500 Firmware Explorer";
 	}
 
 	@Override
