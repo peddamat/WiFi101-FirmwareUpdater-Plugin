@@ -92,8 +92,9 @@ public class UpdaterJFrame extends JFrame {
 
 	public UpdaterJFrame() {
 
-		int scale = Theme.getScale();
-		setTitle("WiFi101 / WiFiNINA Firmware/Certificates Updater");
+		// TODO: Switch this back -sp
+		// int scale = Theme.getScale();
+		int scale = 100;
 		setResizable(false);
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setBounds(100 * scale / 100, 100 * scale / 100, 500 * scale / 100, 520 * scale / 100);
