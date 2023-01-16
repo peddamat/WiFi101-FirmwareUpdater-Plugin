@@ -64,16 +64,16 @@ mkdir -p $OUTPUT_FOLDER
 mkdir -p build
 javac -target 1.8 -cp "$CLASSPATH" -d build src/cc/arduino/plugins/winctool/WINCTool.java
 cd build
-zip -r $OUTPUT_FOLDER/WINCTool.jar *
+zip -q -r $OUTPUT_FOLDER/WINCTool.jar *
 cd ..
 rm -r build
 
 # Copy resources
-cp -rv firmwares $OUTPUT_FOLDER
+cp -r firmwares $OUTPUT_FOLDER
 
 # Create distribution .zip
 mkdir -p dist
-zip -r dist/$ZIP_FILENAME.zip WINCTool/
+zip -q -r dist/$ZIP_FILENAME.zip WINCTool/
 
 # Cleanup
 rm -r WINCTool
@@ -83,3 +83,5 @@ case "$OSTYPE" in
 	darwin*)  unzip -o dist/$ZIP_FILENAME.zip -d $IDE_FOLDER/Java/tools ;;
 	*)        unzip -o dist/$ZIP_FILENAME.zip -d $IDE_FOLDER/tools ;;
 esac
+
+echo "Done building!"
