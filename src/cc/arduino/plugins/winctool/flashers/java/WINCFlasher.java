@@ -40,7 +40,8 @@ import cc.arduino.plugins.winctool.flashers.Flasher;
 
 public class WINCFlasher extends Flasher {
 
-	public WINCFlasher(String _modulename, String _version, String _filename, boolean _certavail, int _baudrate, List<String> _compatibleBoard) {
+	public WINCFlasher(String _modulename, String _version, String _filename, boolean _certavail, int _baudrate,
+			List<String> _compatibleBoard) {
 		super(_modulename, _version, _filename, _certavail, _baudrate, _compatibleBoard);
 	}
 

@@ -56,7 +56,7 @@ public class FlasherSerialClient {
 			boolean res = port.setParams(baudrate, 8, STOPBITS_1, PARITY_NONE, true, true);
 			if (!res) {
 				System.err.println(format(tr("Error while setting serial port parameters: {0} {1} {2} {3}"), 115200,
-				    PARITY_NONE, 8, STOPBITS_1));
+						PARITY_NONE, 8, STOPBITS_1));
 			}
 			port.addEventListener((evt) -> {
 				if (!evt.isRXCHAR())
@@ -77,10 +77,10 @@ public class FlasherSerialClient {
 			});
 		} catch (SerialPortException e) {
 			if (e.getPortName().startsWith("/dev")
-			    && SerialPortException.TYPE_PERMISSION_DENIED.equals(e.getExceptionType())) {
+					&& SerialPortException.TYPE_PERMISSION_DENIED.equals(e.getExceptionType())) {
 				throw new SerialException(format(
-				    tr("Error opening serial port ''{0}''. Try consulting the documentation at http://playground.arduino.cc/Linux/All#Permission"),
-				    portName));
+						tr("Error opening serial port ''{0}''. Try consulting the documentation at http://playground.arduino.cc/Linux/All#Permission"),
+						portName));
 			}
 			throw new SerialException(format(tr("Error opening serial port ''{0}''."), portName), e);
 		}
@@ -97,7 +97,9 @@ public class FlasherSerialClient {
 		try {
 			port.closePort();
 		} catch (Exception e) {
-			throw new SerialException(format(tr("Error opening serial port.\nClose the serial monitor (if open) or any program using port '{0}'"), port.getPortName()));
+			throw new SerialException(format(tr(
+					"Error opening serial port.\nClose the serial monitor (if open) or any program using port '{0}'"),
+					port.getPortName()));
 		}
 	}
 
@@ -105,7 +107,8 @@ public class FlasherSerialClient {
 		sendCommand((byte) 0x99, 0x11223344, 0x55667788, null);
 		byte[] answer = waitAnswer(2000, 6, true);
 		if (answer.length != 6 || answer[0] != 'v') {
-			throw new Exception("Programmer not responding\nMake sure that FirmwareUpdater sketch is loaded on the board.");
+			throw new Exception(
+					"Programmer not responding\nMake sure that FirmwareUpdater sketch is loaded on the board.");
 		}
 		String version = new String(answer);
 		if (!version.equals("v10000"))

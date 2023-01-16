@@ -44,7 +44,8 @@ public class NinaFlasher extends Flasher {
 
 	public byte[] md5Checksum;
 
-	public NinaFlasher(String _modulename, String _version, String _filename, boolean _certavail, int _baudrate, List<String> _compatibleBoard) {
+	public NinaFlasher(String _modulename, String _version, String _filename, boolean _certavail, int _baudrate,
+			List<String> _compatibleBoard) {
 		super(_modulename, _version, _filename, _certavail, _baudrate, _compatibleBoard);
 	}
 
@@ -180,7 +181,7 @@ public class NinaFlasher extends Flasher {
 		}
 	}
 
-	public static byte[] getMD5Checksum(byte[] buffer) throws Exception{
+	public static byte[] getMD5Checksum(byte[] buffer) throws Exception {
 		try {
 			MessageDigest complete = MessageDigest.getInstance("MD5");
 			int numRead = buffer.length;

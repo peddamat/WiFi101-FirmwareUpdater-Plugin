@@ -189,11 +189,11 @@ public class UpdaterImpl extends UpdaterJFrame {
 				try {
 					fw.testConnection(port.getAddress(), fw.getBaudrate());
 					JOptionPane.showMessageDialog(UpdaterImpl.this, "The programmer is working!", "Test successful",
-		          JOptionPane.INFORMATION_MESSAGE);
+							JOptionPane.INFORMATION_MESSAGE);
 				} catch (Exception e) {
 					e.printStackTrace();
 					JOptionPane.showMessageDialog(UpdaterImpl.this, e.getMessage(), "Connection error.",
-		          JOptionPane.ERROR_MESSAGE);
+							JOptionPane.ERROR_MESSAGE);
 				}
 				setEnabled(true);
 				resetProgress();
@@ -207,12 +207,13 @@ public class UpdaterImpl extends UpdaterJFrame {
 		try {
 			fw.openFirmwareUpdaterSketch(getSelectedPort());
 		} catch (NullPointerException e) {
-			JOptionPane.showMessageDialog(UpdaterImpl.this, "Please select a board from the connected ones.", "No board selected",
-				JOptionPane.INFORMATION_MESSAGE);
+			JOptionPane.showMessageDialog(UpdaterImpl.this, "Please select a board from the connected ones.",
+					"No board selected",
+					JOptionPane.INFORMATION_MESSAGE);
 
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(UpdaterImpl.this, e.getMessage(), "Missing library",
-				JOptionPane.ERROR_MESSAGE);
+					JOptionPane.ERROR_MESSAGE);
 		}
 	}
 
@@ -233,10 +234,11 @@ public class UpdaterImpl extends UpdaterJFrame {
 				try {
 					fw.updateFirmware(port.getAddress());
 					JOptionPane.showMessageDialog(UpdaterImpl.this, "The firmware has been updated!", "Success",
-		          JOptionPane.INFORMATION_MESSAGE);
+							JOptionPane.INFORMATION_MESSAGE);
 				} catch (Exception e) {
 					e.printStackTrace();
-					JOptionPane.showMessageDialog(UpdaterImpl.this, e.getMessage(), "Upload error.", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(UpdaterImpl.this, e.getMessage(), "Upload error.",
+							JOptionPane.ERROR_MESSAGE);
 				}
 				setEnabled(true);
 				resetProgress();
@@ -247,10 +249,10 @@ public class UpdaterImpl extends UpdaterJFrame {
 	@Override
 	protected void addCertificate() {
 		String website = JOptionPane.showInputDialog(this, "Enter the website to fetch SSL certificate:",
-		    "Add SSL certificate from website", JOptionPane.QUESTION_MESSAGE);
+				"Add SSL certificate from website", JOptionPane.QUESTION_MESSAGE);
 		if (website.startsWith("http://")) {
 			JOptionPane.showMessageDialog(UpdaterImpl.this, "Sorry \"http://\" protocol doesn't support SSL",
-			    "Invalid URL error.", JOptionPane.ERROR_MESSAGE);
+					"Invalid URL error.", JOptionPane.ERROR_MESSAGE);
 			return;
 		}
 		if (website.startsWith("https://")) {
@@ -264,8 +266,8 @@ public class UpdaterImpl extends UpdaterJFrame {
 		}
 		if (website.contains("/")) {
 			JOptionPane.showMessageDialog(UpdaterImpl.this,
-			    "Error: please use enter the addres using the format:\nwww.example.com:443", "Invalid URL error.",
-			    JOptionPane.ERROR_MESSAGE);
+					"Error: please use enter the addres using the format:\nwww.example.com:443", "Invalid URL error.",
+					JOptionPane.ERROR_MESSAGE);
 			return;
 		}
 		if (!websites.contains(website))
@@ -300,10 +302,11 @@ public class UpdaterImpl extends UpdaterJFrame {
 				try {
 					fw.uploadCertificates(port.getAddress(), websites);
 					JOptionPane.showMessageDialog(UpdaterImpl.this, "The certificates have been uploaded!", "Success",
-		          JOptionPane.INFORMATION_MESSAGE);
+							JOptionPane.INFORMATION_MESSAGE);
 				} catch (Exception e) {
 					e.printStackTrace();
-					JOptionPane.showMessageDialog(UpdaterImpl.this, e.getMessage(), "Upload error.", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(UpdaterImpl.this, e.getMessage(), "Upload error.",
+							JOptionPane.ERROR_MESSAGE);
 				}
 				setEnabled(true);
 				resetProgress();

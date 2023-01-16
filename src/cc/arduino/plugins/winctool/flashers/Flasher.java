@@ -59,9 +59,11 @@ public class Flasher {
 	public boolean certavail;
 	protected int baudrate;
 
-	public Flasher() {}
+	public Flasher() {
+	}
 
-	public Flasher(String _modulename, String _version, String _filename, boolean _certavail, int _baudrate, List<String> _compatibleBoards) {
+	public Flasher(String _modulename, String _version, String _filename, boolean _certavail, int _baudrate,
+			List<String> _compatibleBoards) {
 		modulename = _modulename;
 		compatibleBoards = new ArrayList<>(_compatibleBoards);
 		version = _version;
@@ -110,9 +112,9 @@ public class Flasher {
 			pathToSketch = "examples/FirmwareUpdater/FirmwareUpdater.ino";
 		}
 		for (UserLibrary lib : allLibraries) {
-		  if (lib.getName().equals(nameToSearchFor)) {
-			  firmwareUpdaterExamplePath = lib.getInstalledFolder().getAbsolutePath() + "/" + pathToSketch;
-		  }
+			if (lib.getName().equals(nameToSearchFor)) {
+				firmwareUpdaterExamplePath = lib.getInstalledFolder().getAbsolutePath() + "/" + pathToSketch;
+			}
 		}
 		if (firmwareUpdaterExamplePath == "") {
 			String errorMessage = nameToSearchFor + "library";
