@@ -9,10 +9,30 @@
             "options": {
                 "cwd": "${workspaceFolder}",
                 "env": {
-                    "IDE_FOLDER": "/tmp/arduino-1.8.19",
+                    "IDE_FOLDER": "/tmp/arduino-1.8.19"
                 }
             },
             "command": "./build.sh",
-        }
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        // {
+        //     "label": "run",
+        //     "type": "shell",
+        //     "options": {
+        //         "cwd": "${workspaceFolder}",
+        //         "env": {
+        //             "IDE_FOLDER": "/Applications/Arduino.app/Contents"
+        //         }
+        //     },
+        //     "command": "./run.sh",
+        //     "problemMatcher": [],
+        //     "group": {
+        //         "kind": "none"
+        //     }
+        // }
     ]
 }

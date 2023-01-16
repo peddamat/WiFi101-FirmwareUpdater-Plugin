@@ -2,5 +2,18 @@
     "java.project.referencedLibraries": [
         "lib/**/*.jar",
         "/tmp/arduino-1.8.19/lib/*.jar",
-    ]
+    ],
+    "VsCodeTaskButtons.showCounter": true,
+    "VsCodeTaskButtons.tasks": [
+        {
+            "label": "$(notebook-move-down) Build",
+            "task": "build",
+            "tooltip": "🛠️ Start the \"build\" task"
+        },
+        // {
+        //     "label": "$(search-refresh) Run",
+        //     "task": "run",
+        //     "tooltip": "🛠️ Start the \"run\" task"
+        // },
+    ],
 }
